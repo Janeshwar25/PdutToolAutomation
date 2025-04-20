@@ -8,11 +8,14 @@ import myproject.QueryProcessor.Action;
 import myproject.QueryProcessor.updatedSqlQuery;
 import org.openqa.selenium.support.ui.Select;
 
+import java.util.Arrays;
+
 
 public class RollBackQueryPage extends BaseClass {
 
     private updatedSqlQuery updatedSqlQuery;
     private String[] updatedSqlQueries;
+
 
 
     Action action = new Action();
@@ -34,9 +37,12 @@ public class RollBackQueryPage extends BaseClass {
 
     @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div[4]/button[2]/span")
     private WebElement ResetButton;
+    private updatedSqlQuery sqlQueryPrcessor;
 
     public RollBackQueryPage() {
         PageFactory.initElements(getDriver(), this);
+        this.sqlQueryPrcessor = new updatedSqlQuery();
+
     }
 
 
@@ -46,22 +52,22 @@ public class RollBackQueryPage extends BaseClass {
         dropdown.selectByVisibleText("cirrus_alpha_rso_01");
         action.click(getDriver(), PastScriptRadiobutton);
         action.click(getDriver(), PastScriptArea);
-        this.updatedSqlQueries = updatedSqlQuery.getUpdatedQueries();
+
     }
 
-    public void collectUserInputAndUpdateQueries() throws Throwable {
 
-        this.updatedSqlQuery.collectUserInput();
-        this.updatedSqlQueries = updatedSqlQuery.getUpdatedQueries();
-    }
 
-    public void passDataInPastScriptArea() throws Throwable {
+    public void passDataInPastScriptArea(String query) throws Throwable {
 
-        updatedSqlQuery UpdatedSqlQuery = new updatedSqlQuery();
+        sqlQueryPrcessor.collectUserInput();
+
+        action.type(PastScriptArea, query);
+
+        /*updatedSqlQuery UpdatedSqlQuery = new updatedSqlQuery();
         String[] queries = UpdatedSqlQuery.getUpdatedQueries();
         String queryToExecute = updatedSqlQueries[0];
         action.click(getDriver(), PastScriptArea);
-        action.type(PastScriptArea, queryToExecute);
+        action.type(PastScriptArea, queryToExecute);*/
 
     }
 
