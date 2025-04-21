@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class updatedSqlQuery extends BaseClass {
-    private String[] updatedQueries = new String[5];
+    private static String[] updatedQueries = new String[5];
     private static final Scanner SYSTEM_SCANNER = new Scanner(System.in);
     private String planID;
     private String effectiveDate;
-    private String benefitBundleID;
+    private static String benefitBundleID;
 
 
     public void collectUserInput() {
@@ -97,7 +97,7 @@ public class updatedSqlQuery extends BaseClass {
         return updatedQueries;
     }
 
-    public class QueryPair{
+    public static class QueryPair{
         private String rollbackQuery;
         private String sqlQuery;
 
@@ -114,13 +114,16 @@ public class updatedSqlQuery extends BaseClass {
             return sqlQuery;
         }
 
-        public List<QueryPair> getAllQueryPair(){
+        public List<QueryPair> getValidQueryPairs(List<String> rollbackQueries){
             List<QueryPair> pairs = new ArrayList<>();
-            pairs.add(new QueryPair(rollbackQuery1, sqlQuery1));
-            pairs.add(new QueryPair(rollbackQuery2, sqlQuery2));
-            pairs.add(new QueryPair(rollbackQuery3, sqlQuery3));
-            pairs.add(new QueryPair(rollbackQuery4, sqlQuery4));
-            pairs.add(new QueryPair(rollbackQuery5, sqlQuery5));
+
+            for (int i =0; i< updatedQueries.length; i++){
+                if (i ==4 && (benefitBundleID == null || benefitBundleID.trim().isEmpty())){
+                    continue;
+                }
+                pairs.add(new QueryPair(rollbackQueries.get(i),updatedQueries[i]));
+
+            }
 
             return pairs;
 
