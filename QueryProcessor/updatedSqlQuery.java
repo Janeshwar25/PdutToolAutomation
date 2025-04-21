@@ -97,23 +97,24 @@ public class updatedSqlQuery extends BaseClass {
         return updatedQueries;
     }
 
-    public static class QueryPair{
+    public static class QueryPair {
         private String rollbackQuery;
         private String sqlQuery;
 
-        public QueryPair(String rollbackQuery, String sqlQuery){
+        public QueryPair(String rollbackQuery, String sqlQuery) {
             this.rollbackQuery = rollbackQuery;
             this.sqlQuery = sqlQuery;
 
         }
 
-        public String getRollbackQuery(){
+        public String getRollbackQuery() {
             return rollbackQuery;
         }
-        public String getSqlQuery(){
+
+        public String getSqlQuery() {
             return sqlQuery;
         }
-
+    }
         public List<QueryPair> getValidQueryPairs(List<String> rollbackQueries){
             List<QueryPair> pairs = new ArrayList<>();
 
@@ -131,4 +132,4 @@ public class updatedSqlQuery extends BaseClass {
         }
     }
 
-    }
+
