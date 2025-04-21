@@ -6,6 +6,7 @@ import myproject.PageObjects.RollBackQueryPage;
 import myproject.QueryProcessor.BaseClass;
 import myproject.QueryProcessor.*;
 import org.openqa.selenium.WebDriver;
+import myproject.QueryProcessor.updatedSqlQuery.QueryPair;
 import org.testng.annotations.*;
 import static org.testng.Assert.*;
 import org.testng.annotations.BeforeClass;
@@ -15,8 +16,10 @@ import org.testng.annotations.Test;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
 
 import static org.testng.Assert.assertNotNull;
 
@@ -102,8 +105,38 @@ public class RollBackPageTest extends BaseClass {
 
         rollBack.ClickonSubmitQuery();
         SubmitQueryPage submitQuery = new SubmitQueryPage();
-        submitQuery.clickOnSelectApp();
-        submitQuery.TicketIDValue();
+        List<String> rollBackOutputs = new ArrayList<>();
+        rollBackOutputs.add("RollBack SQL 1");
+        rollBackOutputs.add("RollBack SQL 2");
+        rollBackOutputs.add("RollBack SQL 3");
+        rollBackOutputs.add("RollBack SQL 4");
+        rollBackOutputs.add("RollBack SQL 5");
+
+        List<updatedSqlQuery.QueryPair> queryPairs = sqlQueryProcessor.getValidQueryPairs(rollBackOutputs);
+        for (updatedSqlQuery.QueryPair pair: queryPairs){
+
+            String rollback = pair.getRollbackQuery();
+            String sql = pair.getSqlQuery();
+
+            if (rollback == null || rollback.isEmpty() || sql == null || sql.isEmpty()){
+
+                System.out.println("Skipping empty query pair");
+                continue;
+
+            }
+            try{
+
+                submitQuery.clickOnSelectApp();
+                submitQuery.TicketIDValue();
+
+                submitQuery.passDataInPastRollBackArea();
+            } catch (Exception e){
+                System.out.println("Submission failed for pair"+ e.getMessage());
+            }
+        }
+
+
+
 
 
 
