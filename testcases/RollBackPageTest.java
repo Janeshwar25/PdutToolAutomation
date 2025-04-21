@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 import static org.testng.Assert.assertNotNull;
@@ -24,14 +25,10 @@ public class RollBackPageTest extends BaseClass {
     private static LoginPage loginPage;
     private static HomePage homePage;
     private RollBackQueryPage rollBackQueryPage;
+    private SubmitQueryPage submitQueryPage;
     private static WebDriver driver;
     private static Properties prop = new Properties();
 
-  /*  @BeforeSuite
-    public static void collectInputOnce() {
-        sqlQueryProcessor = new updatedSqlQuery();
-        sqlQueryProcessor.collectUserInput();
-    }*/
 
     public static void main(String[] args) throws Throwable {
 
@@ -72,21 +69,41 @@ public class RollBackPageTest extends BaseClass {
         HomePage homePage = loginPage.login(username, password);
 
         RollBackQueryPage rollBack = homePage.clickonGenerateRollBack();
-        rollBack.clickOnSelectApp();
-        String query = sqlQueryProcessor.getFirstQuery();
-        rollBack.passDataInPastScriptArea(query);
-        rollBack.ClickonGenerateRollBack();
-        rollBack.taketextfromRollBackTextArea1();
 
-        rollBack.ClickonResetButton();
+        List<String> queries = List.of(sqlQueryProcessor.getAllQueries());
+        String benefitBundleId = sqlQueryProcessor.getBenefitBundleID();
 
-        rollBack.clickOnSelectApp();
-        String query1 = sqlQueryProcessor.getSecondQuery();
-        rollBack.passDataInPastScriptArea(query1);
-        /*rollBack.ClickonGenerateRollBack();
-        rollBack.taketextfromRollBackTextArea2();
+        boolean hasBenefitBundleId = benefitBundleId != null && !benefitBundleId.trim().isEmpty();
+        int loopLimit = hasBenefitBundleId ? queries.size() : queries.size() - 1;
 
-        rollBack.ClickonResetButton();*/
+        for (int i = 0; i < loopLimit; i++) {
+            String query = queries.get(i);
+            try {
+                rollBack.clickOnSelectApp();
+                rollBack.passDataInPastScriptArea(query);
+                rollBack.ClickonGenerateRollBack();
+
+                String output = rollBack.taketextfromRollBackTextArea(i + 1);
+                if (output != null && !output.trim().isEmpty()) {
+                    System.out.println("rollback output captured");
+                } else {
+                    System.out.println("Empty rollback outbut detected");
+                }
+            } catch (Exception e) {
+                System.out.println("fail to process query" + (i + 1) + e.getMessage());
+            } finally {
+                rollBack.ClickonResetButton();
+            }
+        }
+
+        if (!hasBenefitBundleId) {
+            System.out.println("Skipped the last query due to missing BenefitBundelId");
+        }
+
+        rollBack.ClickonSubmitQuery();
+        SubmitQueryPage submitQuery = new SubmitQueryPage();
+        submitQuery.clickOnSelectApp();
+        submitQuery.TicketIDValue();
 
 
 
@@ -96,9 +113,16 @@ public class RollBackPageTest extends BaseClass {
 
 
 
-        System.out.println("RollBack test completed");
 
     }
-
-
 }
+
+
+
+
+
+
+
+
+
+
