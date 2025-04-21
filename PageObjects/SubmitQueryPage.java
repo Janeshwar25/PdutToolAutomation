@@ -5,6 +5,7 @@ import myproject.QueryProcessor.BaseClass;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 
 public class SubmitQueryPage extends BaseClass {
 
@@ -29,6 +30,11 @@ public class SubmitQueryPage extends BaseClass {
     @FindBy(xpath="//*[@id=\"main\"]/div[2]/button[1]/span")
     private WebElement SubmitButton;
 
+    @FindBy (xpath = "//*[@id=\"select\"]")
+    private WebElement SelectAppFromDropDown;
+
+
+
 
 
     public SubmitQueryPage() {
@@ -37,10 +43,12 @@ public class SubmitQueryPage extends BaseClass {
 
 
     public void clickOnSelectApp() throws Throwable {
-        action.click(getDriver(), SelectApp);
+        action.click(getDriver(), SelectAppFromDropDown);
+        Select dropdown = new Select(SelectAppFromDropDown);
+        dropdown.selectByVisibleText("cirrus_alpha_rso_01");
     }
 
-    public void TicketIDValue (String NA) throws Throwable {
+    public void TicketIDValue () throws Throwable {
         action.type(Ticketidinput, "NA");
     }
 
