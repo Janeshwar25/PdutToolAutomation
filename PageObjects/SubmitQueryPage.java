@@ -2,6 +2,7 @@ package myproject.PageObjects;
 
 import myproject.QueryProcessor.Action;
 import myproject.QueryProcessor.BaseClass;
+import myproject.QueryProcessor.updatedSqlQuery;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -33,12 +34,13 @@ public class SubmitQueryPage extends BaseClass {
     @FindBy (xpath = "//*[@id=\"select\"]")
     private WebElement SelectAppFromDropDown;
 
-
+    private updatedSqlQuery sqlQueryPrcessor;
 
 
 
     public SubmitQueryPage() {
         PageFactory.initElements(getDriver(), this);
+        this.sqlQueryPrcessor = new updatedSqlQuery();
     }
 
 
@@ -53,12 +55,13 @@ public class SubmitQueryPage extends BaseClass {
     }
 
 
-    public void clickOnPastScriptArea() throws Throwable {
-        action.click(getDriver(), PastScriptArea);
+    public void passDataInPastScriptArea() throws Throwable {
+        action.type(PastScriptArea, );
+
     }
 
-    public void clickOnPastRollBackArea() throws Throwable {
-        action.click(getDriver(), PastRollBackArea);
+    public void passDataInPastRollBackArea() throws Throwable {
+        action.type(PastRollBackArea, )
     }
 
     public void clickOnSubmitButton() throws Throwable {
