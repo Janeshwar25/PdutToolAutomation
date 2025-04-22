@@ -6,7 +6,11 @@ import myproject.QueryProcessor.updatedSqlQuery;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class SubmitQueryPage extends BaseClass {
 
@@ -77,12 +81,16 @@ public class SubmitQueryPage extends BaseClass {
     }
 
     public void clickOnSubmitButton() throws Throwable {
-        action.click(getDriver(), SubmitButton);
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(90));
+        WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(SubmitButton));
+        submitButton.click();
 
     }
 
     public void clickOnYesPopup() throws Throwable {
-        action.click(getDriver(), YesPopup);
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(90));
+        WebElement popupButton = wait.until(ExpectedConditions.elementToBeClickable(YesPopup));
+        popupButton.click();
 
     }
 
