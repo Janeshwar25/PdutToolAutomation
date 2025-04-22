@@ -5,8 +5,12 @@ import myproject.PageObjects.LoginPage;
 import myproject.PageObjects.RollBackQueryPage;
 import myproject.QueryProcessor.BaseClass;
 import myproject.QueryProcessor.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import myproject.QueryProcessor.updatedSqlQuery.QueryPair;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
 import static org.testng.Assert.*;
 import org.testng.annotations.BeforeClass;
@@ -16,6 +20,7 @@ import org.testng.annotations.Test;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -125,20 +130,30 @@ public class RollBackPageTest extends BaseClass {
 
             }
             try{
-
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
                 //submitQuery.fillAndSubmitQuery(rollback, sql);
                 submitQuery.clickOnSelectApp();
                 submitQuery.TicketIDValue();
+
                 submitQuery.passDataInPastScriptArea(sql);
                 submitQuery.passDataInPastRollBackArea(rollback);
 
-                submitQuery.clickOnSubmitButton();
+
+
+                WebElement submitbtn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"main\"]/div[2]/button[1]")));
+                submitbtn.click();
+
+                //submitQuery.clickOnSubmitButton();
+                wait.until(ExpectedConditions.alertIsPresent());
                 submitQuery.clickOnYesPopup();
 
 
             } catch (Exception e){
                 System.out.println("Submission failed for pair"+ e.getMessage());
             }
+
+
+
         }
 
 
