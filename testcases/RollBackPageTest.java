@@ -130,21 +130,18 @@ public class RollBackPageTest extends BaseClass {
 
             }
             try{
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+
                 //submitQuery.fillAndSubmitQuery(rollback, sql);
                 submitQuery.clickOnSelectApp();
                 submitQuery.TicketIDValue();
 
                 submitQuery.passDataInPastScriptArea(sql);
+
                 submitQuery.passDataInPastRollBackArea(rollback);
 
 
+                submitQuery.clickOnSubmitButton();
 
-                WebElement submitbtn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"main\"]/div[2]/button[1]")));
-                submitbtn.click();
-
-                //submitQuery.clickOnSubmitButton();
-                wait.until(ExpectedConditions.alertIsPresent());
                 submitQuery.clickOnYesPopup();
 
 
