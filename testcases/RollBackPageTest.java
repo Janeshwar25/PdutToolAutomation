@@ -79,6 +79,7 @@ public class RollBackPageTest extends BaseClass {
         boolean hasBenefitBundleId = benefitBundleId != null && !benefitBundleId.trim().isEmpty();
         int loopLimit = hasBenefitBundleId ? queries.size() : queries.size() - 1;
 
+        List<String> rollBackOutputs = new ArrayList<>();
         for (int i = 0; i < loopLimit; i++) {
             String query = queries.get(i);
             try {
@@ -88,12 +89,16 @@ public class RollBackPageTest extends BaseClass {
 
                 String output = rollBack.taketextfromRollBackTextArea(i + 1);
                 if (output != null && !output.trim().isEmpty()) {
-                    System.out.println("rollback output captured");
+                    System.out.println("rollback output captured for query" + (i + 1));
+                    rollBackOutputs.add(output);
                 } else {
                     System.out.println("Empty rollback outbut detected");
+                    rollBackOutputs.add("");
+
                 }
             } catch (Exception e) {
                 System.out.println("fail to process query" + (i + 1) + e.getMessage());
+                rollBackOutputs.add("");
             } finally {
                 rollBack.ClickonResetButton();
             }
@@ -105,12 +110,7 @@ public class RollBackPageTest extends BaseClass {
 
         rollBack.ClickonSubmitQuery();
         SubmitQueryPage submitQuery = new SubmitQueryPage();
-        List<String> rollBackOutputs = new ArrayList<>();
-        rollBackOutputs.add("RollBack SQL 1");
-        rollBackOutputs.add("RollBack SQL 2");
-        rollBackOutputs.add("RollBack SQL 3");
-        rollBackOutputs.add("RollBack SQL 4");
-        rollBackOutputs.add("RollBack SQL 5");
+
 
         List<updatedSqlQuery.QueryPair> queryPairs = sqlQueryProcessor.getValidQueryPairs(rollBackOutputs);
         for (updatedSqlQuery.QueryPair pair: queryPairs){
@@ -126,10 +126,16 @@ public class RollBackPageTest extends BaseClass {
             }
             try{
 
+                //submitQuery.fillAndSubmitQuery(rollback, sql);
                 submitQuery.clickOnSelectApp();
                 submitQuery.TicketIDValue();
+                submitQuery.passDataInPastScriptArea(sql);
+                submitQuery.passDataInPastRollBackArea(rollback);
 
-                submitQuery.passDataInPastRollBackArea();
+                submitQuery.clickOnSubmitButton();
+                submitQuery.clickOnYesPopup();
+
+
             } catch (Exception e){
                 System.out.println("Submission failed for pair"+ e.getMessage());
             }
