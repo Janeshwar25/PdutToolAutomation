@@ -135,6 +135,7 @@ public class RollBackPageTest extends BaseClass {
                 submitQuery.clickOnSelectApp();
                 submitQuery.TicketIDValue();
 
+
                 submitQuery.passDataInPastScriptArea(sql);
 
                 submitQuery.passDataInPastRollBackArea(rollback);
@@ -143,6 +144,8 @@ public class RollBackPageTest extends BaseClass {
                 submitQuery.clickOnSubmitButton();
 
                 submitQuery.clickOnYesPopup();
+
+                submitQuery.ClickOnConfirmationButton();
 
 
             } catch (Exception e){
