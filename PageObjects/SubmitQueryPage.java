@@ -150,11 +150,16 @@ public void passDataInPastRollBackArea(String rollback) throws Throwable {
     Thread.sleep(1000);
 
     // Type line by line to simulate real input
-    String[] lines = rollback.split("\n");
-    for (String line : lines) {
-        PastRollBackArea.sendKeys(line);
-        PastRollBackArea.sendKeys("\n");
-        Thread.sleep(100); // mimic natural typing
+    int chunkCount = 4;
+    int chunkSize = rollback.length() / chunkCount;
+    for (int i = 0; i < chunkCount; i++) {
+        int start = i * chunkSize;
+        int end = (i == chunkCount - 1) ? rollback.length() : (i + 1) * chunkSize;
+        String chunk = rollback.substring(start, end);
+
+        // Send chunk as keys
+        PastRollBackArea.sendKeys(chunk);
+        Thread.sleep(500); // small delay to mimic natural input
     }
 
     Thread.sleep(2000); // wait to see if Submit gets enabled
