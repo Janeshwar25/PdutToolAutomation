@@ -28,11 +28,14 @@ public class SubmitQueryPage extends BaseClass {
     @FindBy(xpath="/html/body/div/div/div/div[3]/main/div[2]/div[8]/div/textarea")
     private WebElement PastRollBackArea;
 
-    @FindBy(xpath="//*[@id=\"main\"]/div[2]/button[1]/span")
+    @FindBy(xpath="//*[@id=\"main\"]/div[2]/button[1]")
     private WebElement SubmitButton;
 
     @FindBy (xpath = "//*[@id=\"select\"]")
     private WebElement SelectAppFromDropDown;
+
+    @FindBy(xpath = "/html/body/div[2]/div/div/div/div[3]/button")
+    private WebElement YesPopup;
 
     private updatedSqlQuery sqlQueryPrcessor;
 
@@ -55,17 +58,31 @@ public class SubmitQueryPage extends BaseClass {
     }
 
 
-    public void passDataInPastScriptArea() throws Throwable {
-        action.type(PastScriptArea, );
+    public void fillAndSubmitQuery(String rollback, String sqlQuery) throws Throwable{
+        clickOnSelectApp();
+        TicketIDValue();
+        passDataInPastScriptArea(sqlQuery);
+        passDataInPastRollBackArea(rollback);
+        clickOnSubmitButton();
+    }
+
+
+    public void passDataInPastScriptArea(String sql) throws Throwable {
+        action.type(PastScriptArea, sql);
 
     }
 
-    public void passDataInPastRollBackArea() throws Throwable {
-        action.type(PastRollBackArea, )
+    public void passDataInPastRollBackArea(String rollback) throws Throwable {
+        action.type(PastRollBackArea, rollback );
     }
 
     public void clickOnSubmitButton() throws Throwable {
         action.click(getDriver(), SubmitButton);
+
+    }
+
+    public void clickOnYesPopup() throws Throwable {
+        action.click(getDriver(), YesPopup);
 
     }
 
