@@ -134,5 +134,30 @@ public class SubmitQueryPage extends BaseClass {
 
 }
 
+public void passDataInPastRollBackArea(String rollback) throws Throwable {
+    WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(30));
+    wait.until(ExpectedConditions.visibilityOf(PastRollBackArea));
+    ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", PastRollBackArea);
+    Thread.sleep(1000);
+
+    // Clear using JS first (if normal clear doesn't work)
+    ((JavascriptExecutor) getDriver()).executeScript("arguments[0].value = '';", PastRollBackArea);
+    Thread.sleep(500);
+
+    // Click the field to focus and type
+    PastRollBackArea.click();
+    PastRollBackArea.clear();
+    Thread.sleep(1000);
+
+    // Type line by line to simulate real input
+    String[] lines = rollback.split("\n");
+    for (String line : lines) {
+        PastRollBackArea.sendKeys(line);
+        PastRollBackArea.sendKeys("\n");
+        Thread.sleep(100); // mimic natural typing
+    }
+
+    Thread.sleep(2000); // wait to see if Submit gets enabled
+}
 
 
