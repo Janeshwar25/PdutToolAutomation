@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class updatedSqlQuery extends BaseClass {
-    private static String[] updatedQueries = new String[5];
+    private static String[] updatedQueries = new String[6];
     private static final Scanner SYSTEM_SCANNER = new Scanner(System.in);
     private String planID;
     private String effectiveDate;
@@ -45,6 +45,8 @@ public class updatedSqlQuery extends BaseClass {
         updatedQueries[2] = SqlQueryStorage.sqlQuery3.replace("2018-01-01", effectiveDate).replace("RX01000085", planID);
         updatedQueries[3] = SqlQueryStorage.sqlQuery4.replace("2018-01-01", effectiveDate).replace("RX01000085", planID);
         updatedQueries[4] = SqlQueryStorage.sqlQuery5.replace("2018-01-01", effectiveDate).replace("RX01000085", planID);
+        updatedQueries[5] = SqlQueryStorage.sqlQuery6.replace("2018-01-01", effectiveDate).replace("RX01000085", planID);
+
 
 
        /* String updatedSqlQuery1 = sqlQuery1.replace("2018-01-01", effectiveDate).replace("RX01000085", planID);
@@ -56,9 +58,9 @@ public class updatedSqlQuery extends BaseClass {
         String updatedSqlQuery5 = sqlQuery5.replace("2018-01-01", effectiveDate).replace("RX01000085", planID);*/
 
         if (!benefitBundleID.isEmpty()) {
-            updatedQueries[4] = updatedQueries[4].replace("51765352", benefitBundleID);
+            updatedQueries[5] = updatedQueries[5].replace("51765352", benefitBundleID);
         } else {
-            updatedQueries[4] = updatedQueries[4].replace("{benefitBundleId}", "");
+            updatedQueries[5] = updatedQueries[5].replace("{benefitBundleId}", "");
         }
 
         /*System.out.println(updatedSqlQuery1);
@@ -88,6 +90,12 @@ public class updatedSqlQuery extends BaseClass {
     public String getFifthQuery(){
         return updatedQueries[4];
     }
+
+    public String getSixthQuery(){
+        return updatedQueries[5];
+    }
+
+
 
     public String getBenefitBundleID(){
         return this.benefitBundleID;
@@ -119,7 +127,7 @@ public class updatedSqlQuery extends BaseClass {
             List<QueryPair> pairs = new ArrayList<>();
 
             for (int i =0; i< updatedQueries.length; i++){
-                if (i ==4 && (benefitBundleID == null || benefitBundleID.trim().isEmpty())){
+                if (i ==5 && (benefitBundleID == null || benefitBundleID.trim().isEmpty())){
                     continue;
                 }
                 pairs.add(new QueryPair(rollbackQueries.get(i),updatedQueries[i]));
