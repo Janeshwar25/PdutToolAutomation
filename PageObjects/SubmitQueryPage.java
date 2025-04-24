@@ -6,6 +6,7 @@ import myproject.QueryProcessor.updatedSqlQuery;
 import org.bouncycastle.jcajce.provider.asymmetric.X509;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -25,6 +26,9 @@ public class SubmitQueryPage extends BaseClass {
 
     @FindBy(xpath = "//*[@id=\"ticket-id-input\"]")
     private WebElement Ticketidinput;
+
+    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div[8]/div")
+    private WebElement FormControlcomponent;
 
     @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div[6]/div[1]/fieldset/ul/li[2]/div/label")
     private WebElement PastScriptRadiobutton;
@@ -81,14 +85,30 @@ public class SubmitQueryPage extends BaseClass {
         WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(30));
         wait.until(ExpectedConditions.visibilityOf(PastScriptArea));
         wait.until(ExpectedConditions.elementToBeClickable(PastScriptArea));
-        /*JavascriptExecutor js = (JavascriptExecutor) getDriver();
-        js.executeScript("argument[0].value = argument[1];",PastRollBackArea,sql);
-        PastScriptArea.clear();*/
         ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", PastScriptArea);
-        Thread.sleep(2000);
-        PastScriptArea.clear();
-        Thread.sleep(2000);
-        action.type(PastScriptArea, sql);
+        Thread.sleep(1000);
+        action.click(getDriver(), PastScriptArea);
+        /*JavascriptExecutor js = (JavascriptExecutor) getDriver();
+        js.executeScript("argument[0].value = argument[1];",PastRollBackArea,rollback);*/
+        //PastRollBackArea.clear();
+        Thread.sleep(1000);
+        ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].value = arguments[1];"
+                + "arguments[0].dispatchEvent (new Event ('input',{bubbles: true}));"
+                + "arguments[0].dispatchEvent(new Event('change',{bubbles: true}));", PastScriptArea, sql);
+
+        // Clear using JS first (if normal clear doesn't work)
+        //((JavascriptExecutor) getDriver()).executeScript("arguments[0].value = '';", PastRollBackArea);
+        action.click(getDriver(), PastScriptArea);
+        ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", FormControlcomponent);
+        PastScriptArea.sendKeys(Keys.CONTROL,Keys.END);
+        PastScriptArea.sendKeys(Keys.CONTROL,Keys.END);
+        PastScriptArea.sendKeys(Keys.ENTER);
+        //PastRollBackArea.sendKeys("  ");
+        // Click the field to focus and type
+        PastScriptArea.click();
+        Thread.sleep(1000);
+
+        //action.type(PastScriptArea, sql);
 
     }
 
@@ -97,39 +117,32 @@ public class SubmitQueryPage extends BaseClass {
         WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(30));
         wait.until(ExpectedConditions.visibilityOf(PastRollBackArea));
         ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", PastRollBackArea);
-        Thread.sleep(2000);
-
+        Thread.sleep(1000);
+        action.click(getDriver(), PastRollBackArea);
         /*JavascriptExecutor js = (JavascriptExecutor) getDriver();
         js.executeScript("argument[0].value = argument[1];",PastRollBackArea,rollback);*/
-        PastRollBackArea.clear();
-        Thread.sleep(2000);
-        /*((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].value = arguments[1];"
-                +"arguments[0].dispatchEvent (new Event ('input',{bubbles: true}));"
-                +"arguments[0].dispatchEvent(new Event('change',{bubbles: true}));",PastRollBackArea, rollback);*/
+        //PastRollBackArea.clear();
+        Thread.sleep(1000);
+        ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].value = arguments[1];"
+                + "arguments[0].dispatchEvent (new Event ('input',{bubbles: true}));"
+                + "arguments[0].dispatchEvent(new Event('change',{bubbles: true}));", PastRollBackArea, rollback);
 
         // Clear using JS first (if normal clear doesn't work)
-        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].value = '';", PastRollBackArea);
-        Thread.sleep(500);
-
+        //((JavascriptExecutor) getDriver()).executeScript("arguments[0].value = '';", PastRollBackArea);
+        action.click(getDriver(), PastRollBackArea);
+        ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", FormControlcomponent);
+        PastRollBackArea.sendKeys(Keys.CONTROL,Keys.END);
+        PastRollBackArea.sendKeys(Keys.CONTROL,Keys.END);
+        PastRollBackArea.sendKeys(Keys.ENTER);
+        //PastRollBackArea.sendKeys("  ");
         // Click the field to focus and type
         PastRollBackArea.click();
-        PastRollBackArea.clear();
+
+
         Thread.sleep(1000);
-
-        // Type line by line to simulate real input
-        int chunkCount = 20;
-        int chunkSize = rollback.length() / chunkCount;
-        for (int i = 0; i < chunkCount; i++) {
-            int start = i * chunkSize;
-            int end = (i == chunkCount - 1) ? rollback.length() : (i + 1) * chunkSize;
-            String chunk = rollback.substring(start, end);
-
-            // Send chunk as keys
-            PastRollBackArea.sendKeys(chunk);
-            Thread.sleep(500); // small delay to mimic natural input
-        }
-        Thread.sleep(2000); // wait to see if Submit gets enabled
     }
+
+
 
 
     public void clickOnSubmitButton() throws Throwable {
