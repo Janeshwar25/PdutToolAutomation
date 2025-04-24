@@ -15,10 +15,12 @@ public class SqlQueryStorage
             UPDATE benePlanRelationship SET effectiveDate = '2018-01-01', expirationDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND effectiveDate > '2018-01-01';
             UPDATE benePlanSettings SET benPlanEffDate = '2018-01-01', benPlanExpDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND benPlanEffDate > '2018-01-01';
             UPDATE beneStoplossOOPPeriod SET stoplossOOPEffDate = '2018-01-01', stoplossOOPExpDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND stoplossOOPEffDate > '2018-01-01';
-            UPDATE beneExternalID SET externalIDEffDate = '2018-01-01', externalIDExpDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND externalIDEffDate > '2018-01-01';""";
+            UPDATE beneExternalID SET externalIDEffDate = '2018-01-01', externalIDExpDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND externalIDEffDate > '2018-01-01';
+            """;
 
         static String sqlQuery2 = """ 
-                UPDATE benefitPlanCode SET benefitCodeEffDate = '2018-01-01', benefitCodeExpDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND benefitCodeEffDate > '2018-01-01';""";
+                UPDATE benefitPlanCode SET benefitCodeEffDate = '2018-01-01', benefitCodeExpDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND benefitCodeEffDate > '2018-01-01';
+                """;
 
         static String sqlQuery3 = """
         
@@ -30,20 +32,21 @@ public class SqlQueryStorage
                 UPDATE BeneAttribSched SET effectiveDate = '2018-01-01', expirationDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND effectiveDate > '2018-01-01';
                 UPDATE BeneCOCYear SET effectiveDate = '2018-01-01', expirationDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND effectiveDate > '2018-01-01';
                 UPDATE BeneCopayPeriod SET copayEffDate = '2018-01-01', copayExpDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND copayEffDate > '2018-01-01';
+                """;
+
+        static String sqlQuery4 = """
                 UPDATE BeneCostSharePeriod SET costShareEffDate = '2018-01-01', costShareExpDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND costShareEffDate > '2018-01-01';
                 UPDATE BeneNetworkBaseRate SET effectiveDate = '2018-01-01', expirationDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND effectiveDate > '2018-01-01';
                 UPDATE BeneNetworkSchedExternalID SET externalIDEffDate = '2018-01-01', externalIDExpDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND externalIDEffDate > '2018-01-01';
                 UPDATE BeneTierNetworkProvDetail SET effectiveDate = '2018-01-01', expirationDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND effectiveDate > '2018-01-01';
                 UPDATE BeneTierNetworkProv SET effectiveDate = '2018-01-01', expirationDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND effectiveDate > '2018-01-01';
                 """;
-
-
-        static String sqlQuery4 = """
+        static String sqlQuery5 = """
                 UPDATE BenePlanFulfillmentTextPeriod SET effectiveDate = '2018-01-01', expirationDate = '9999-12-31' WHERE benefitPlanVersionID IN (SELECT DISTINCT benefitPlanVersionID FROM benefitPlan WHERE planId IN ('RX01000085') AND benPlanStatus = 'A') AND effectiveDate > '2018-01-01';
                 """;
 
 
-        static String sqlQuery5 = """
+        static String sqlQuery6 = """
                 
                 UPDATE benefitBundle SET benefitBundleEffDate = '2018-01-01', benefitBundleExpDate = '9999-12-31' WHERE benefitBundleStatus = 'A' AND benefitBundleID IN ('51765352') AND benefitBundleEffDate > '2018-01-01';
                 UPDATE benefitBundleActuarialValue SET actuarialValueEffDate = '2018-01-01', actuarialValueExpDate = '9999-12-31' WHERE benefitBundleID IN ('51765352') AND actuarialValueEffDate > '2018-01-01';
