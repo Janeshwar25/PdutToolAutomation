@@ -89,6 +89,7 @@ public class RollBackPageTest extends BaseClass {
             String query = queries.get(i);
             try {
                 rollBack.clickOnSelectApp();
+                Thread.sleep(1000);
                 rollBack.passDataInPastScriptArea(query);
                 rollBack.ClickonGenerateRollBack();
 
@@ -140,10 +141,13 @@ public class RollBackPageTest extends BaseClass {
 
                 submitQuery.passDataInPastRollBackArea(rollback);
 
-
                 submitQuery.clickOnSubmitButton();
 
+                Thread.sleep(1000);
+
                 submitQuery.clickOnYesPopup();
+
+                Thread.sleep(1000);
 
                 submitQuery.ClickOnConfirmationButton();
 
@@ -155,16 +159,6 @@ public class RollBackPageTest extends BaseClass {
 
 
         }
-
-
-
-
-
-
-
-
-
-
 
 
 
