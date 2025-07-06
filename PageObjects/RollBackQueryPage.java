@@ -57,7 +57,7 @@ public class RollBackQueryPage extends BaseClass {
     public void clickOnSelectApp() throws Throwable {
         action.click(getDriver(), ClickOnSelectAppDropDown);
         Select dropdown = new Select(SelectAppFromDropDown);
-        dropdown.selectByVisibleText("cirrus_alpha_rso_01");
+        dropdown.selectByVisibleText("gcp_cirrus_alpha_rso_01");
         action.click(getDriver(), PastScriptRadiobutton);
         action.click(getDriver(), PastScriptArea);
 
