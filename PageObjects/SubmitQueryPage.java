@@ -4,10 +4,7 @@ import myproject.QueryProcessor.Action;
 import myproject.QueryProcessor.BaseClass;
 import myproject.QueryProcessor.updatedSqlQuery;
 import org.bouncycastle.jcajce.provider.asymmetric.X509;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -21,13 +18,13 @@ public class SubmitQueryPage extends BaseClass {
 
     Action action = new Action();
 
-    @FindBy(xpath = "//*[@id=\"select\"]/option[9]")
+    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div[2]/div/div/div/div/div/fieldset")
     private WebElement SelectApp;
 
     @FindBy(xpath = "//*[@id=\"ticket-id-input\"]")
     private WebElement Ticketidinput;
 
-    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div[8]/div")
+    @FindBy(css = "#scripts-input-textarea")
     private WebElement FormControlcomponent;
 
     @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div[6]/div[1]/fieldset/ul/li[2]/div/label")
@@ -36,20 +33,29 @@ public class SubmitQueryPage extends BaseClass {
     @FindBy(xpath = "//*[@id=\"scripts-input-textarea\"]")
     private WebElement PastScriptArea;
 
-    @FindBy(xpath = "/html/body/div/div/div/div[3]/main/div[2]/div[8]/div/textarea")
+    @FindBy(xpath = "//*[@id=\"rollback-query-input\"]")
     private WebElement PastRollBackArea;
 
-    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/button[1]")
+    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div[2]/div[2]/div[9]/button[1]")
     private WebElement SubmitButton;
 
-    @FindBy(xpath = "//*[@id=\"select\"]")
+    @FindBy(css = "#main > div.MuiContainer-root.MuiContainer-maxWidthLg.css-m8ifx4 > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation2.MuiCard-root.css-10jbveu > div > div > div > div > div > svg")
     private WebElement SelectAppFromDropDown;
+
+    @FindBy(css = "#main > div.MuiContainer-root.MuiContainer-maxWidthLg.css-m8ifx4 > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation2.MuiCard-root.css-10jbveu > div > div > div > div > div > svg")
+    private WebElement clickonSelectAppFromDropDown;
 
     @FindBy(xpath = "/html/body/div[2]/div/div/div/div[3]/button")
     private WebElement YesPopup;
 
-    @FindBy(xpath = "/html/body/div[2]/div/div/div/div[3]/button")
+    @FindBy(xpath = "/html/body/div[2]/div[3]/div/div[2]/button")
     private WebElement ConfirmationButton;
+
+    @FindBy( xpath = "//*[@id=\"main\"]/div[2]/div[2]/div/div/div/div[2]/div[46]/span" )
+    private WebElement alpharso1;
+
+    @FindBy(css = "#\\:r0\\:")
+    private WebElement enterappnamearea;
 
     private updatedSqlQuery sqlQueryPrcessor;
 
@@ -62,8 +68,14 @@ public class SubmitQueryPage extends BaseClass {
 
     public void clickOnSelectApp() throws Throwable {
         action.click(getDriver(), SelectAppFromDropDown);
-        Select dropdown = new Select(SelectAppFromDropDown);
-        dropdown.selectByVisibleText("cirrus_alpha_rso_01");
+        WebElement option = getDriver().findElement(By.cssSelector("#main > div.MuiContainer-root.MuiContainer-maxWidthLg.css-m8ifx4 > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation2.MuiCard-root.css-10jbveu > div > div > div > div.sc-dAlyuH.dbaUME > div:nth-child(46) > span"));
+        option.click();
+
+        //Select dropdown = new Select(clickonSelectAppFromDropDown);
+        //action.scrollByVisibilityOfElement(clickonSelectAppFromDropDown);
+        //dropdown.selectByValue("gcp_cirrus_alpha_rso_01");
+        //dropdown.selectByVisibleText("gcp_cirrus_alpha_rso_01");
+        //action.click(getDriver(), alpharso1);
     }
 
     public void TicketIDValue() throws Throwable {
@@ -168,6 +180,7 @@ public class SubmitQueryPage extends BaseClass {
     }
 
 }
+
 
 
 
