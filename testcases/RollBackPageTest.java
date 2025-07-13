@@ -78,13 +78,23 @@ public class RollBackPageTest extends BaseClass {
 
         RollBackQueryPage rollBack = homePage.clickonGenerateRollBack();
 
-        List<String> queries = List.of(sqlQueryProcessor.getAllQueries());
+        String[] queryArray = sqlQueryProcessor.getAllQueries();
+        List<String> queries = new ArrayList<>();
+        for (String q: queryArray){
+            queries.add(q);
+        }
+
         String benefitBundleId = sqlQueryProcessor.getBenefitBundleID();
+
+
+        /*List<String> queries = List.of(sqlQueryProcessor.getAllQueries());
+        String benefitBundleId = sqlQueryProcessor.getBenefitBundleID();*/
 
         boolean hasBenefitBundleId = benefitBundleId != null && !benefitBundleId.trim().isEmpty();
         int loopLimit = hasBenefitBundleId ? queries.size() : queries.size() - 1;
 
-        List<String> rollBackOutputs = new ArrayList<>();
+        //List<String> rollBackOutputs = new ArrayList<>();
+        List<updatedSqlQuery.QueryPair> queryPairs = new ArrayList<>();
         for (int i = 0; i < loopLimit; i++) {
             String query = queries.get(i);
             try {
@@ -93,18 +103,28 @@ public class RollBackPageTest extends BaseClass {
                 rollBack.passDataInPastScriptArea(query);
                 rollBack.ClickonGenerateRollBack();
 
-                String output = rollBack.taketextfromRollBackTextArea(i + 1);
-                if (output != null && !output.trim().isEmpty()) {
+                //String output = rollBack.taketextfromRollBackTextArea(i + 1);
+                String rollBackOutput = rollBack.taketextfromRollBackTextArea(i + 1);
+                if (rollBackOutput == null || rollBackOutput.trim().isEmpty()){
+                    rollBackOutput = "";
+                    System.out.println("Empty rollback output detected");
+
+                }else {
+                    System.out.println("Rollback output captured for query" + (i +1));
+                }
+                queryPairs.add(new updatedSqlQuery.QueryPair(rollBackOutput, query));
+                /*if (output != null && !output.trim().isEmpty()) {
                     System.out.println("rollback output captured for query" + (i + 1));
                     rollBackOutputs.add(output);
                 } else {
                     System.out.println("Empty rollback outbut detected");
                     rollBackOutputs.add("");
 
-                }
+                }*/
             } catch (Exception e) {
                 System.out.println("fail to process query" + (i + 1) + e.getMessage());
-                rollBackOutputs.add("");
+                queryPairs.add(new updatedSqlQuery.QueryPair("", query));
+                //rollBackOutputs.add("");
             } finally {
                 rollBack.ClickonResetButton();
             }
@@ -118,7 +138,7 @@ public class RollBackPageTest extends BaseClass {
         SubmitQueryPage submitQuery = new SubmitQueryPage();
 
 
-        List<updatedSqlQuery.QueryPair> queryPairs = sqlQueryProcessor.getValidQueryPairs(rollBackOutputs);
+        //List<updatedSqlQuery.QueryPair> queryPairs = sqlQueryProcessor.getValidQueryPairs(rollBackOutputs);
         for (updatedSqlQuery.QueryPair pair: queryPairs){
 
             String rollback = pair.getRollbackQuery();
