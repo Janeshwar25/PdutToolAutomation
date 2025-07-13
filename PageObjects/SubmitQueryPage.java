@@ -45,14 +45,18 @@ public class SubmitQueryPage extends BaseClass {
     @FindBy(css = "#main > div.MuiContainer-root.MuiContainer-maxWidthLg.css-m8ifx4 > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation2.MuiCard-root.css-10jbveu > div > div > div > div > div > svg")
     private WebElement clickonSelectAppFromDropDown;
 
-    @FindBy(xpath = "/html/body/div[2]/div/div/div/div[3]/button")
+    @FindBy(xpath = "/html/body/div[2]/div[3]/div/div[2]/button[1]")
     private WebElement YesPopup;
+
 
     @FindBy(xpath = "/html/body/div[2]/div[3]/div/div[2]/button")
     private WebElement ConfirmationButton;
 
     @FindBy( xpath = "//*[@id=\"main\"]/div[2]/div[2]/div/div/div/div[2]/div[46]/span" )
     private WebElement alpharso1;
+
+    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div[2]/div/h6")
+    private WebElement OuterAreaClick;
 
     @FindBy(css = "#\\:r0\\:")
     private WebElement enterappnamearea;
@@ -67,15 +71,27 @@ public class SubmitQueryPage extends BaseClass {
 
 
     public void clickOnSelectApp() throws Throwable {
-        action.click(getDriver(), SelectAppFromDropDown);
-        WebElement option = getDriver().findElement(By.cssSelector("#main > div.MuiContainer-root.MuiContainer-maxWidthLg.css-m8ifx4 > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation2.MuiCard-root.css-10jbveu > div > div > div > div.sc-dAlyuH.dbaUME > div:nth-child(46) > span"));
-        option.click();
 
-        //Select dropdown = new Select(clickonSelectAppFromDropDown);
-        //action.scrollByVisibilityOfElement(clickonSelectAppFromDropDown);
+        WebElement dropdownIcon = getDriver().findElement(By.cssSelector("svg.MuiSvgIcon-root"));
+        dropdownIcon.click();
+        WebDriverWait wait = new WebDriverWait(getDriver(),Duration.ofSeconds(5));
+        WebElement optionToSelect = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"main\"]/div[2]/div[2]/div/div/div/div[2]/div[44]")));
+        optionToSelect.click();
+
+
+        //action.click(getDriver(), SelectAppFromDropDown);
+        /*Select dropdown = new Select(SelectAppFromDropDown);
+        dropdown.selectByVisibleText("gcp_cirrus_alpha_rso_01");*/
+        //action.JSClick(getDriver(), SelectAppFromDropDown);
+        //action.click(getDriver(), SelectAppFromDropDown);
+        /*WebElement option = getDriver().findElement(By.cssSelector("#main > div.MuiContainer-root.MuiContainer-maxWidthLg.css-m8ifx4 > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation2.MuiCard-root.css-10jbveu > div > div > div > div > div > svg"));
+        option.click();*/
+
+        /*Select dropdown = new Select(SelectAppFromDropDown);
+        action.scrollByVisibilityOfElement(getDriver(),SelectAppFromDropDown);
         //dropdown.selectByValue("gcp_cirrus_alpha_rso_01");
-        //dropdown.selectByVisibleText("gcp_cirrus_alpha_rso_01");
-        //action.click(getDriver(), alpharso1);
+        dropdown.selectByVisibleText("gcp_cirrus_alpha_rso_01");
+        //action.click(getDriver(), alpharso1);*/
     }
 
     public void TicketIDValue() throws Throwable {
