@@ -103,16 +103,76 @@ public class RollBackPageTest extends BaseClass {
                 rollBack.passDataInPastScriptArea(query);
                 rollBack.ClickonGenerateRollBack();
 
-                //String output = rollBack.taketextfromRollBackTextArea(i + 1);
-                String rollBackOutput = rollBack.taketextfromRollBackTextArea(i + 1);
-                if (rollBackOutput == null || rollBackOutput.trim().isEmpty()){
-                    rollBackOutput = "";
+                String output = rollBack.taketextfromRollBackTextArea(i + 1);
+                //String rollBackOutput = rollBack.taketextfromRollBackTextArea(i + 1);
+                String rollbackOutput = "";
+                boolean rollbackAreaPresent = rollBack.isRollbackAreaPresent();
+
+                if (rollbackAreaPresent){
+                    rollbackOutput = rollBack.taketextfromRollBackTextArea(i + 1);
+                    System.out.println("Roobacl output captured for query" + (i+1));
+
+                } else {
+                    String statsMessage = rollBack.getStatsMessage();
+                    System.out.println("Stats box message:" + statsMessage);
+
+                    if (statsMessage.contains("Total no. of records will be updated=0")){
+                        System.out.println("Detected 0 ricords in stats box");
+
+                        rollBack.ClickonResetButton();
+                        Thread.sleep(1000);
+                        rollBack.clickOnSelectApp();
+                        rollBack.clickonRadioButton();
+                        Thread.sleep(1000);
+
+                        if (rollBack.isRollbackAreaPresent()){
+                            rollbackOutput = rollBack.taketextfromRollBackTextArea( i +1);
+                            System.out.println("Rollbac output after combining queries" + (i +1));
+                        }
+                    }
+                }
+
+                if (rollbackOutput.trim().isEmpty() || rollbackOutput.contains("Total no. of records will be updated=0")) {
+                    System.out.println("Detected 0 records, trying with all queries combined" + (i + 1) + ",retrying with combined query");
+                    rollBack.ClickonResetButton();
+                    Thread.sleep(1000);
+
+                    rollBack.clickOnSelectApp();
+                    Thread.sleep(500);
+                    rollBack.clickonRadioButton();
+                    Thread.sleep(500);
+
+                    List<String> queriesToCombine = new ArrayList<>();
+                    for (int idx = 0; idx < queries.size(); idx++) {
+                        if (idx < 5) {
+                            queriesToCombine.add(queries.get(idx));
+                        }
+                    }
+
+                    String allQueriesCombined = String.join("\n", queriesToCombine);
+
+                    rollBack.passDataInPastScriptArea(allQueriesCombined);
+                    rollBack.ClickonGenerateRollBack();
+                    Thread.sleep(1000);
+
+                    if (rollBack.isRollbackAreaPresent()) {
+                        rollbackOutput = rollBack.taketextfromRollBackTextArea(i + 1);
+                    } else {
+                        rollbackOutput = rollBack.getStatsMessage();
+                    }
+                }
+
+
+                if (rollbackOutput == null || rollbackOutput.trim().isEmpty())
+                {
+
+                    rollbackOutput = "";
                     System.out.println("Empty rollback output detected");
 
                 }else {
                     System.out.println("Rollback output captured for query" + (i +1));
                 }
-                queryPairs.add(new updatedSqlQuery.QueryPair(rollBackOutput, query));
+                queryPairs.add(new updatedSqlQuery.QueryPair(rollbackOutput, query));
                 /*if (output != null && !output.trim().isEmpty()) {
                     System.out.println("rollback output captured for query" + (i + 1));
                     rollBackOutputs.add(output);
