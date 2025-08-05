@@ -1,4 +1,5 @@
 package myproject.PageObjects;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -30,16 +31,16 @@ public class RollBackQueryPage extends BaseClass {
     @FindBy(xpath = "//*[@id=\"main\"]/div[2]/fieldset/ul/li[2]/div/label")
     private WebElement PastScriptRadiobutton;
 
-    @FindBy(xpath = "//*[@id=\"scripts-input-textarea\"]")
+    @FindBy(xpath = "/html/body/div/div/div/div[3]/main/div[2]/div/form/div[4]/div/div/textarea[1]")
     private WebElement PastScriptArea;
 
-    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div[4]/button[1]/span")
+    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div/form/div[5]/button[1]")
     private WebElement GenerateRollBackButton;
 
-    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div[6]/button[2]")
+    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div/form/div[7]/button[2]")
     private WebElement ResetButton;
 
-    @FindBy(xpath = "//*[@id=\"ticket-id-input\"]")
+    @FindBy(xpath = "/html/body/div/div/div/div[3]/main/div[2]/div/form/div[5]/div/div/textarea[1]")
     private WebElement RollBackTextArea;
 
     @FindBy(xpath = "//*[@id=\"react-root\"]/div/div/div[3]/aside/nav/ul/li[2]/a/span/span[2]")
@@ -55,11 +56,18 @@ public class RollBackQueryPage extends BaseClass {
 
 
     public void clickOnSelectApp() throws Throwable {
-        action.click(getDriver(), ClickOnSelectAppDropDown);
+
+        WebElement dropdownIcon = getDriver().findElement(By.cssSelector("svg.MuiSvgIcon-root"));
+        dropdownIcon.click();
+        WebDriverWait wait = new WebDriverWait(getDriver(),Duration.ofSeconds(5));
+        WebElement optionToSelect = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"main\"]/div[2]/div/form/div/div/div[2]/div[44]/span")));
+        optionToSelect.click();
+
+        /*action.click(getDriver(), ClickOnSelectAppDropDown);
         Select dropdown = new Select(SelectAppFromDropDown);
         dropdown.selectByVisibleText("gcp_cirrus_alpha_rso_01");
         action.click(getDriver(), PastScriptRadiobutton);
-        action.click(getDriver(), PastScriptArea);
+        action.click(getDriver(), PastScriptArea);*/
 
     }
 
@@ -106,7 +114,7 @@ public class RollBackQueryPage extends BaseClass {
     }
 
     public String taketextfromRollBackTextArea(int index) throws Throwable{
-         String RollBackText = RollBackTextArea.getText();
+        String RollBackText = RollBackTextArea.getText();
         System.out.println("RollBack Output ["+index+"] using getTxt" + RollBackText);
         String RollBack1 = RollBackTextArea.getText();
         System.out.println(RollBack1);
@@ -136,7 +144,6 @@ public class RollBackQueryPage extends BaseClass {
     }
 
 }
-
 
 
 
