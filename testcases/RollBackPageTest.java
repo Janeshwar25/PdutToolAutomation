@@ -80,7 +80,7 @@ public class RollBackPageTest extends BaseClass {
 
         String[] queryArray = sqlQueryProcessor.getAllQueries();
         List<String> queries = new ArrayList<>();
-        for (String q: queryArray){
+        for (String q : queryArray) {
             queries.add(q);
         }
 
@@ -94,159 +94,83 @@ public class RollBackPageTest extends BaseClass {
         int loopLimit = hasBenefitBundleId ? queries.size() : queries.size() - 1;
 
         //List<String> rollBackOutputs = new ArrayList<>();
+
         List<updatedSqlQuery.QueryPair> queryPairs = new ArrayList<>();
+
         for (int i = 0; i < loopLimit; i++) {
             String query = queries.get(i);
+            System.out.println("Processing query " + (i + 1));
+
             try {
                 rollBack.clickOnSelectApp();
-                Thread.sleep(1000);
+                Thread.sleep(1500); // Slightly increased for UI stability
                 rollBack.passDataInPastScriptArea(query);
                 rollBack.ClickonGenerateRollBack();
 
-                String output = rollBack.taketextfromRollBackTextArea(i + 1);
-                //String rollBackOutput = rollBack.taketextfromRollBackTextArea(i + 1);
-                String rollbackOutput = "";
-                boolean rollbackAreaPresent = rollBack.isRollbackAreaPresent();
+                System.out.println("Waiting for rollback output...");
+                String rollBackOutput = rollBack.taketextfromRollBackTextArea(i + 1);
 
-                if (rollbackAreaPresent){
-                    rollbackOutput = rollBack.taketextfromRollBackTextArea(i + 1);
-                    System.out.println("Roobacl output captured for query" + (i+1));
-
+                if (rollBackOutput == null || rollBackOutput.trim().isEmpty()) {
+                    rollBackOutput = "";
+                    System.out.println("Empty rollback output detected for query " + (i + 1));
                 } else {
-                    String statsMessage = rollBack.getStatsMessage();
-                    System.out.println("Stats box message:" + statsMessage);
-
-                    if (statsMessage.contains("Total no. of records will be updated=0")){
-                        System.out.println("Detected 0 ricords in stats box");
-
-                        rollBack.ClickonResetButton();
-                        Thread.sleep(1000);
-                        rollBack.clickOnSelectApp();
-                        rollBack.clickonRadioButton();
-                        Thread.sleep(1000);
-
-                        if (rollBack.isRollbackAreaPresent()){
-                            rollbackOutput = rollBack.taketextfromRollBackTextArea( i +1);
-                            System.out.println("Rollbac output after combining queries" + (i +1));
-                        }
-                    }
+                    System.out.println("Rollback output captured for query " + (i + 1));
                 }
 
-                if (rollbackOutput.trim().isEmpty() || rollbackOutput.contains("Total no. of records will be updated=0")) {
-                    System.out.println("Detected 0 records, trying with all queries combined" + (i + 1) + ",retrying with combined query");
-                    rollBack.ClickonResetButton();
-                    Thread.sleep(1000);
+                queryPairs.add(new updatedSqlQuery.QueryPair(rollBackOutput, query));
 
-                    rollBack.clickOnSelectApp();
-                    Thread.sleep(500);
-                    rollBack.clickonRadioButton();
-                    Thread.sleep(500);
-
-                    List<String> queriesToCombine = new ArrayList<>();
-                    for (int idx = 0; idx < queries.size(); idx++) {
-                        if (idx < 5) {
-                            queriesToCombine.add(queries.get(idx));
-                        }
-                    }
-
-                    String allQueriesCombined = String.join("\n", queriesToCombine);
-
-                    rollBack.passDataInPastScriptArea(allQueriesCombined);
-                    rollBack.ClickonGenerateRollBack();
-                    Thread.sleep(1000);
-
-                    if (rollBack.isRollbackAreaPresent()) {
-                        rollbackOutput = rollBack.taketextfromRollBackTextArea(i + 1);
-                    } else {
-                        rollbackOutput = rollBack.getStatsMessage();
-                    }
-                }
-
-
-                if (rollbackOutput == null || rollbackOutput.trim().isEmpty())
-                {
-
-                    rollbackOutput = "";
-                    System.out.println("Empty rollback output detected");
-
-                }else {
-                    System.out.println("Rollback output captured for query" + (i +1));
-                }
-                queryPairs.add(new updatedSqlQuery.QueryPair(rollbackOutput, query));
-                /*if (output != null && !output.trim().isEmpty()) {
-                    System.out.println("rollback output captured for query" + (i + 1));
-                    rollBackOutputs.add(output);
-                } else {
-                    System.out.println("Empty rollback outbut detected");
-                    rollBackOutputs.add("");
-
-                }*/
             } catch (Exception e) {
-                System.out.println("fail to process query" + (i + 1) + e.getMessage());
+                System.err.println("Failed to process query " + (i + 1) + ": " + e.getMessage());
+                e.printStackTrace();
                 queryPairs.add(new updatedSqlQuery.QueryPair("", query));
-                //rollBackOutputs.add("");
             } finally {
-                rollBack.ClickonResetButton();
+                try {
+                    System.out.println("Attempting to reset rollback form for query " + (i + 1));
+                    rollBack.ClickonResetButton();
+                    System.out.println("Reset successful for query " + (i + 1));
+                } catch (Exception resetEx) {
+                    System.err.println("Reset failed for query " + (i + 1) + ": " + resetEx.getMessage());
+                }
             }
         }
 
         if (!hasBenefitBundleId) {
-            System.out.println("Skipped the last query due to missing BenefitBundelId");
+            System.out.println("Skipped the last query due to missing BenefitBundleId");
         }
 
         rollBack.ClickonSubmitQuery();
         SubmitQueryPage submitQuery = new SubmitQueryPage();
 
-
-        //List<updatedSqlQuery.QueryPair> queryPairs = sqlQueryProcessor.getValidQueryPairs(rollBackOutputs);
-        for (updatedSqlQuery.QueryPair pair: queryPairs){
-
+        for (updatedSqlQuery.QueryPair pair : queryPairs) {
             String rollback = pair.getRollbackQuery();
             String sql = pair.getSqlQuery();
 
-            if (rollback == null || rollback.isEmpty() || sql == null || sql.isEmpty()){
-
+            if (rollback == null || rollback.isEmpty() || sql == null || sql.isEmpty()) {
                 System.out.println("Skipping empty query pair");
                 continue;
-
             }
-            try{
 
-                //submitQuery.fillAndSubmitQuery(rollback, sql);
+            try {
                 submitQuery.clickOnSelectApp();
                 submitQuery.TicketIDValue();
-
-
                 submitQuery.passDataInPastScriptArea(sql);
-
                 submitQuery.passDataInPastRollBackArea(rollback);
-
                 submitQuery.clickOnSubmitButton();
 
                 Thread.sleep(1000);
-
                 submitQuery.clickOnYesPopup();
-
                 Thread.sleep(1000);
-
                 submitQuery.ClickOnConfirmationButton();
 
+                System.out.println("Successfully submitted query pair");
 
-            } catch (Exception e){
-                System.out.println("Submission failed for pair"+ e.getMessage());
+            } catch (Exception e) {
+                System.err.println("Submission failed for pair: " + e.getMessage());
+                e.printStackTrace();
             }
-
-
-
         }
-
-
-
     }
 }
-
-
-
 
 
 
