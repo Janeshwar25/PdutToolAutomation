@@ -123,21 +123,20 @@ public class updatedSqlQuery extends BaseClass {
             return sqlQuery;
         }
     }
-        public List<QueryPair> getValidQueryPairs(List<String> rollbackQueries){
-            List<QueryPair> pairs = new ArrayList<>();
+    public List<QueryPair> getValidQueryPairs(List<String> rollbackQueries){
+        List<QueryPair> pairs = new ArrayList<>();
 
-            for (int i =0; i< updatedQueries.length; i++){
-                if (i ==5 && (benefitBundleID == null || benefitBundleID.trim().isEmpty())){
-                    continue;
-                }
-                pairs.add(new QueryPair(rollbackQueries.get(i),updatedQueries[i]));
-
+        for (int i =0; i< updatedQueries.length; i++){
+            if (i ==5 && (benefitBundleID == null || benefitBundleID.trim().isEmpty())){
+                continue;
             }
-
-            return pairs;
-
+            pairs.add(new QueryPair(rollbackQueries.get(i),updatedQueries[i]));
 
         }
-    }
 
+        return pairs;
+
+
+    }
+}
 
