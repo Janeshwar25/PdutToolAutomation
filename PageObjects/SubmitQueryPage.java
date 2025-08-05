@@ -1,57 +1,72 @@
 package myproject.PageObjects;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
+
+import myproject.QueryProcessor.Action;
+import myproject.QueryProcessor.BaseClass;
+import myproject.QueryProcessor.updatedSqlQuery;
+import org.bouncycastle.jcajce.provider.asymmetric.X509;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import myproject.QueryProcessor.BaseClass;
-import myproject.QueryProcessor.Action;
-import myproject.QueryProcessor.updatedSqlQuery;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-
-public class RollBackQueryPage extends BaseClass {
-
-    private updatedSqlQuery updatedSqlQuery;
-    private String[] updatedSqlQueries;
+public class SubmitQueryPage extends BaseClass {
 
 
     Action action = new Action();
 
-    @FindBy(xpath = "//*[@id=\"select\"]")
-    private WebElement ClickOnSelectAppDropDown;
+    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div[2]/div/div/div/div/div/fieldset")
+    private WebElement SelectApp;
 
-    @FindBy(xpath = "//*[@id=\"select\"]")
-    private WebElement SelectAppFromDropDown;
+    @FindBy(xpath = "//*[@id=\"ticket-id-input\"]")
+    private WebElement Ticketidinput;
 
-    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/fieldset/ul/li[2]/div/label")
+    @FindBy(css = "#scripts-input-textarea")
+    private WebElement FormControlcomponent;
+
+    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div[6]/div[1]/fieldset/ul/li[2]/div/label")
     private WebElement PastScriptRadiobutton;
 
-    @FindBy(xpath = "/html/body/div/div/div/div[3]/main/div[2]/div/form/div[4]/div/div/textarea[1]")
+    @FindBy(xpath = "//*[@id=\"scripts-input-textarea\"]")
     private WebElement PastScriptArea;
 
-    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div/form/div[5]/button[1]")
-    private WebElement GenerateRollBackButton;
+    @FindBy(xpath = "//*[@id=\"rollback-query-input\"]")
+    private WebElement PastRollBackArea;
 
-    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div/form/div[7]/button[2]")
-    private WebElement ResetButton;
+    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div[2]/div[2]/div[9]/button[1]")
+    private WebElement SubmitButton;
 
-    @FindBy(xpath = "/html/body/div/div/div/div[3]/main/div[2]/div/form/div[5]/div/div/textarea[1]")
-    private WebElement RollBackTextArea;
+    @FindBy(css = "#main > div.MuiContainer-root.MuiContainer-maxWidthLg.css-m8ifx4 > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation2.MuiCard-root.css-10jbveu > div > div > div > div > div > svg")
+    private WebElement SelectAppFromDropDown;
 
-    @FindBy(xpath = "//*[@id=\"react-root\"]/div/div/div[3]/aside/nav/ul/li[2]/a/span/span[2]")
-    private WebElement SubmitQuery;
+    @FindBy(css = "#main > div.MuiContainer-root.MuiContainer-maxWidthLg.css-m8ifx4 > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation2.MuiCard-root.css-10jbveu > div > div > div > div > div > svg")
+    private WebElement clickonSelectAppFromDropDown;
+
+    @FindBy(xpath = "/html/body/div[2]/div[3]/div/div[2]/button[1]")
+    private WebElement YesPopup;
+
+
+    @FindBy(xpath = "/html/body/div[2]/div[3]/div/div[2]/button")
+    private WebElement ConfirmationButton;
+
+    @FindBy( xpath = "//*[@id=\"main\"]/div[2]/div[2]/div/div/div/div[2]/div[46]/span" )
+    private WebElement alpharso1;
+
+    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div[2]/div/h6")
+    private WebElement OuterAreaClick;
+
+    @FindBy(css = "#\\:r0\\:")
+    private WebElement enterappnamearea;
 
     private updatedSqlQuery sqlQueryPrcessor;
 
-    public RollBackQueryPage() {
+
+    public SubmitQueryPage() {
         PageFactory.initElements(getDriver(), this);
         this.sqlQueryPrcessor = new updatedSqlQuery();
-
     }
 
 
@@ -60,87 +75,124 @@ public class RollBackQueryPage extends BaseClass {
         WebElement dropdownIcon = getDriver().findElement(By.cssSelector("svg.MuiSvgIcon-root"));
         dropdownIcon.click();
         WebDriverWait wait = new WebDriverWait(getDriver(),Duration.ofSeconds(5));
-        WebElement optionToSelect = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"main\"]/div[2]/div/form/div/div/div[2]/div[44]/span")));
+        WebElement optionToSelect = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"main\"]/div[2]/div[2]/div/div/div/div[2]/div[44]")));
         optionToSelect.click();
 
-        /*action.click(getDriver(), ClickOnSelectAppDropDown);
-        Select dropdown = new Select(SelectAppFromDropDown);
-        dropdown.selectByVisibleText("gcp_cirrus_alpha_rso_01");
-        action.click(getDriver(), PastScriptRadiobutton);
-        action.click(getDriver(), PastScriptArea);*/
 
+        //action.click(getDriver(), SelectAppFromDropDown);
+        /*Select dropdown = new Select(SelectAppFromDropDown);
+        dropdown.selectByVisibleText("gcp_cirrus_alpha_rso_01");*/
+        //action.JSClick(getDriver(), SelectAppFromDropDown);
+        //action.click(getDriver(), SelectAppFromDropDown);
+        /*WebElement option = getDriver().findElement(By.cssSelector("#main > div.MuiContainer-root.MuiContainer-maxWidthLg.css-m8ifx4 > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation2.MuiCard-root.css-10jbveu > div > div > div > div > div > svg"));
+        option.click();*/
+
+        /*Select dropdown = new Select(SelectAppFromDropDown);
+        action.scrollByVisibilityOfElement(getDriver(),SelectAppFromDropDown);
+        //dropdown.selectByValue("gcp_cirrus_alpha_rso_01");
+        dropdown.selectByVisibleText("gcp_cirrus_alpha_rso_01");
+        //action.click(getDriver(), alpharso1);*/
+    }
+
+    public void TicketIDValue() throws Throwable {
+        action.type(Ticketidinput, "NA");
     }
 
 
-    public void passDataInPastScriptArea(String query) throws Throwable {
+    public void fillAndSubmitQuery(String rollback, String sqlQuery) throws Throwable {
+        clickOnSelectApp();
+        TicketIDValue();
+        passDataInPastScriptArea(sqlQuery);
+        passDataInPastRollBackArea(rollback);
+        clickOnSubmitButton();
+    }
+
+
+    public void passDataInPastScriptArea(String sql) throws Throwable {
 
         WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(30));
         wait.until(ExpectedConditions.visibilityOf(PastScriptArea));
+        wait.until(ExpectedConditions.elementToBeClickable(PastScriptArea));
         ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", PastScriptArea);
         Thread.sleep(1000);
         action.click(getDriver(), PastScriptArea);
-
+        /*JavascriptExecutor js = (JavascriptExecutor) getDriver();
+        js.executeScript("argument[0].value = argument[1];",PastRollBackArea,rollback);*/
+        //PastRollBackArea.clear();
         Thread.sleep(1000);
         ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].value = arguments[1];"
                 + "arguments[0].dispatchEvent (new Event ('input',{bubbles: true}));"
-                + "arguments[0].dispatchEvent(new Event('change',{bubbles: true}));", PastScriptArea, query);
+                + "arguments[0].dispatchEvent(new Event('change',{bubbles: true}));", PastScriptArea, sql);
 
         // Clear using JS first (if normal clear doesn't work)
         //((JavascriptExecutor) getDriver()).executeScript("arguments[0].value = '';", PastRollBackArea);
         action.click(getDriver(), PastScriptArea);
+        ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", FormControlcomponent);
         PastScriptArea.sendKeys(Keys.CONTROL,Keys.END);
         PastScriptArea.sendKeys(Keys.CONTROL,Keys.END);
         PastScriptArea.sendKeys(Keys.ENTER);
         //PastRollBackArea.sendKeys("  ");
         // Click the field to focus and type
         PastScriptArea.click();
+        Thread.sleep(1000);
 
-        //action.type(PastScriptArea, query);
-
-
-
-        /*updatedSqlQuery UpdatedSqlQuery = new updatedSqlQuery();
-        String[] queries = UpdatedSqlQuery.getUpdatedQueries();
-        String queryToExecute = updatedSqlQueries[0];
-        action.click(getDriver(), PastScriptArea);
-        action.type(PastScriptArea, queryToExecute);*/
+        //action.type(PastScriptArea, sql);
 
     }
 
-    public void ClickonGenerateRollBack() throws Throwable {
+    public void passDataInPastRollBackArea(String rollback) throws Throwable {
 
-        action.click(getDriver(), GenerateRollBackButton);
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(30));
+        wait.until(ExpectedConditions.visibilityOf(PastRollBackArea));
+        ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", PastRollBackArea);
+        Thread.sleep(1000);
+        action.click(getDriver(), PastRollBackArea);
+        /*JavascriptExecutor js = (JavascriptExecutor) getDriver();
+        js.executeScript("argument[0].value = argument[1];",PastRollBackArea,rollback);*/
+        //PastRollBackArea.clear();
+        Thread.sleep(1000);
+        ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].value = arguments[1];"
+                + "arguments[0].dispatchEvent (new Event ('input',{bubbles: true}));"
+                + "arguments[0].dispatchEvent(new Event('change',{bubbles: true}));", PastRollBackArea, rollback);
+
+        // Clear using JS first (if normal clear doesn't work)
+        //((JavascriptExecutor) getDriver()).executeScript("arguments[0].value = '';", PastRollBackArea);
+        action.click(getDriver(), PastRollBackArea);
+        ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", FormControlcomponent);
+        PastRollBackArea.sendKeys(Keys.CONTROL,Keys.END);
+        PastRollBackArea.sendKeys(Keys.CONTROL,Keys.END);
+        PastRollBackArea.sendKeys(Keys.ENTER);
+        //PastRollBackArea.sendKeys("  ");
+        // Click the field to focus and type
+        PastRollBackArea.click();
+
+
+        Thread.sleep(1000);
+    }
+
+
+
+
+    public void clickOnSubmitButton() throws Throwable {
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(30));
+        WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(SubmitButton));
+        submitButton.click();
 
     }
 
-    public String taketextfromRollBackTextArea(int index) throws Throwable{
-        String RollBackText = RollBackTextArea.getText();
-        System.out.println("RollBack Output ["+index+"] using getTxt" + RollBackText);
-        String RollBack1 = RollBackTextArea.getText();
-        System.out.println(RollBack1);
-        return RollBackText;
+    public void clickOnYesPopup() throws Throwable {
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(30));
+        WebElement popupButton = wait.until(ExpectedConditions.elementToBeClickable(YesPopup));
+        popupButton.click();
+
     }
 
-   /* public void taketextfromRollBackTextArea2() throws Throwable{
-        String RollBack2 = RollBackTextArea.getText();
-        System.out.println(RollBack2);
-    }*/
-
-
-
-
-    public void ClickonResetButton() throws Throwable {
-
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(90));
-        WebElement resetButton = wait.until(ExpectedConditions.elementToBeClickable(ResetButton));
-        resetButton.click();
-        /*action.isEnabled(getDriver(), ResetButton);
-        action.JSClick(getDriver(),ResetButton);*/
-    }
-
-    public void ClickonSubmitQuery() throws Throwable{
-
-        action.click(getDriver(), SubmitQuery);
+    public void ClickOnConfirmationButton()throws Throwable{
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(30));
+        wait.until(ExpectedConditions.elementToBeClickable(ConfirmationButton));
+        action.JSClick(getDriver(), ConfirmationButton);
+       /* WebElement confirmationButton = wait.until(ExpectedConditions.elementToBeClickable(ConfirmationButton));
+        confirmationButton.click();*/
     }
 
 }
