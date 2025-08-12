@@ -8,7 +8,6 @@ import myproject.QueryProcessor.BaseClass;
 import myproject.QueryProcessor.Action;
 import myproject.QueryProcessor.updatedSqlQuery;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -40,11 +39,17 @@ public class RollBackQueryPage extends BaseClass {
     @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div/form/div[7]/button[2]")
     private WebElement ResetButton;
 
+    @FindBy(xpath = "//*[@id=\"main\"]/div[2]/div/form/div[6]/button[2]")
+    private WebElement ResetButton2;
+
     @FindBy(xpath = "/html/body/div/div/div/div[3]/main/div[2]/div/form/div[5]/div/div/textarea[1]")
     private WebElement RollBackTextArea;
 
     @FindBy(xpath = "//*[@id=\"react-root\"]/div/div/div[3]/aside/nav/ul/li[2]/a/span/span[2]")
     private WebElement SubmitQuery;
+
+    @FindBy(xpath = "/html/body/div/div/div/div[3]/main/div[2]/div/form/div[5]/div/div/textarea[1]")
+    private WebElement statsBox;
 
     private updatedSqlQuery sqlQueryPrcessor;
 
@@ -59,7 +64,7 @@ public class RollBackQueryPage extends BaseClass {
 
         WebElement dropdownIcon = getDriver().findElement(By.cssSelector("svg.MuiSvgIcon-root"));
         dropdownIcon.click();
-        WebDriverWait wait = new WebDriverWait(getDriver(),Duration.ofSeconds(5));
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(5));
         WebElement optionToSelect = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"main\"]/div[2]/div/form/div/div/div[2]/div[44]/span")));
         optionToSelect.click();
 
@@ -70,6 +75,65 @@ public class RollBackQueryPage extends BaseClass {
         action.click(getDriver(), PastScriptArea);*/
 
     }
+
+    public String getStatsboxText() {
+        try {
+            WebElement statsBoxElement = getDriver().findElement(By.xpath("/html/body/div/div/div/div[3]/main/div[2]/div/form/div[5]/div/div/textarea[1]"));
+            return statsBoxElement.getText();
+        } catch (Exception e) {
+            System.out.println("Error retrieving stats box text: " + e.getMessage());
+            return "";
+        }
+    }
+
+    /*public boolean checkStatsAndResetIFNoRecords(int i) throws Throwable {
+        try {
+            WebElement statsBox = getStatsboxText();
+            String statsText = statsBox.getText();
+            System.out.println("Rollback [5] using getText:" + statsText);
+            return statsText.contains("Totaal no. of record will be updated=0");
+        } catch (Exception e) {
+            System.out.println("Stats box not found or error occoured:" + e.getMessage());
+            return false;
+        }
+    }*/
+
+    public boolean checkStatsAndResetIFNoRecords(int i) throws Throwable {
+        try {
+            String statsText = getStatsboxText();
+            System.out.println("Rollback [" + i + "] Stats Text:\n" + statsText);
+
+            // Normalize and check each line
+            String[] lines = statsText.split("\\r?\\n");
+            for (String line : lines) {
+                if (line.trim().contains("Total no. of records will be updated=0") ||
+                        line.trim().contains("Totaal no. of record will be updated=0") ||
+                        line.trim().contains("Total record will be affected=0")) {
+
+                    System.out.println("No records to update for query " + i + ". Clicking Reset.");
+                    action.click(getDriver(),ResetButton2); // Reset the form
+                    return true; // Skip this query
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error checking stats box: " + e.getMessage());
+        }
+        return false; // Continue processing if no match
+    }
+
+
+
+       /* WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(30));
+        wait.until(ExpectedConditions.visibilityOf(statsBox));
+        String statsText = action.getText(statsBox);
+        System.out.println("Stats Output:" + statsText);
+
+        if (statsText.contains("Total no. of records will be updated = 0")) {
+            System.out.println("No records to update. Clicking Reset.");
+            ClickonResetButton();
+            return true;
+        }
+        return false;*/
 
 
     public void passDataInPastScriptArea(String query) throws Throwable {
