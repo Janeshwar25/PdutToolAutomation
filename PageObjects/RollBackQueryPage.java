@@ -58,43 +58,37 @@ public class RollBackQueryPage extends BaseClass {
     }
 
 
-
-    public void clickOnSelectApp() throws Throwable {
-
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
-        WebElement dropdownIcon = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("svg.MuiSvgIcon-root")));
-        dropdownIcon.click();
-        WebElement optionToSelect = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"main\"]/div[2]/div/form/div/div/div[2]/div[44]/span")));
-        optionToSelect.click();
-       /* try {
-            WebElement dropdownIcon = getDriver().findElement(By.cssSelector("#main > div.MuiBox-root.css-fk96wx > div > form > div > div > div > div > svg"));
-            dropdownIcon.click();
-
-            WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(5));
-            WebElement optionToSelect = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.xpath("//*[@id=\"main\"]/div[2]/div/form/div/div/div[2]/div[44]")));
-            optionToSelect.click();
-        } catch (TimeoutException e) {
-            System.out.println("Dropdown option not found, retrying...");
-            Thread.sleep(1000); // Wait briefly
-            WebDriver driver = getDriver();
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            try {
-                WebElement dropdownIcon = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#main > div.MuiBox-root.css-fk96wx > div > form > div > div > div > div > svg")));
-                dropdownIcon.click();
-
-                WebElement optionToSelect = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                        By.xpath("//span[text()='YourOptionText']"))); // Replace with actual visible text
-                optionToSelect.click();
-
-                System.out.println("Dropdown option selected successfully on retry.");
-            } catch (Exception retryEx) {
-                System.err.println("Retry failed: " + retryEx.getMessage());
-                throw retryEx; // Let the calling method handle it
-            }
-        }*/
-
+public void clickOnSelectApp() {
+    selectAppByTyping("gcp_cirrus_alpha_rso_01");
 }
+
+private void selectAppByTyping(String appName) {
+    WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(20));
+
+    // 1) Wait until input is present (after Reset form re-renders)
+    By inputLocator = By.xpath("//input[@placeholder='Enter App Name']");
+    WebElement input = wait.until(ExpectedConditions.elementToBeClickable(inputLocator));
+
+    // 2) Focus input (fallback to JS if needed)
+    try { input.click(); } 
+    catch (Exception e) { ((JavascriptExecutor)getDriver()).executeScript("arguments[0].click();", input); }
+
+    // 3) Clear + type app name (MUI autocomplete)
+    input.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+    input.sendKeys(Keys.DELETE);
+    input.sendKeys(appName);
+
+    // 4) Wait for listbox option and click it
+    By optionLocator = By.xpath("//ul[@role='listbox']//li[@role='option' and normalize-space()='" + appName + "']");
+    WebElement option = wait.until(ExpectedConditions.elementToBeClickable(optionLocator));
+    option.click();
+
+    // 5) Confirm selection reflected in input value
+    wait.until(ExpectedConditions.attributeToBe(input, "value", appName));
+}
+
+    
+    
         /*action.click(getDriver(), ClickOnSelectAppDropDown);
         Select dropdown = new Select(SelectAppFromDropDown);
         dropdown.selectByVisibleText("gcp_cirrus_alpha_rso_01");
@@ -232,6 +226,7 @@ public class RollBackQueryPage extends BaseClass {
     }
 
 }
+
 
 
 
