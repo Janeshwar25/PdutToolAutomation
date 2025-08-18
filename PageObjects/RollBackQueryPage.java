@@ -1,7 +1,5 @@
 package myproject.PageObjects;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import myproject.QueryProcessor.BaseClass;
@@ -60,21 +58,50 @@ public class RollBackQueryPage extends BaseClass {
     }
 
 
+
     public void clickOnSelectApp() throws Throwable {
 
-        WebElement dropdownIcon = getDriver().findElement(By.cssSelector("svg.MuiSvgIcon-root"));
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
+        WebElement dropdownIcon = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("svg.MuiSvgIcon-root")));
         dropdownIcon.click();
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(5));
         WebElement optionToSelect = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"main\"]/div[2]/div/form/div/div/div[2]/div[44]/span")));
         optionToSelect.click();
+       /* try {
+            WebElement dropdownIcon = getDriver().findElement(By.cssSelector("#main > div.MuiBox-root.css-fk96wx > div > form > div > div > div > div > svg"));
+            dropdownIcon.click();
 
+            WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(5));
+            WebElement optionToSelect = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//*[@id=\"main\"]/div[2]/div/form/div/div/div[2]/div[44]")));
+            optionToSelect.click();
+        } catch (TimeoutException e) {
+            System.out.println("Dropdown option not found, retrying...");
+            Thread.sleep(1000); // Wait briefly
+            WebDriver driver = getDriver();
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            try {
+                WebElement dropdownIcon = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#main > div.MuiBox-root.css-fk96wx > div > form > div > div > div > div > svg")));
+                dropdownIcon.click();
+
+                WebElement optionToSelect = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                        By.xpath("//span[text()='YourOptionText']"))); // Replace with actual visible text
+                optionToSelect.click();
+
+                System.out.println("Dropdown option selected successfully on retry.");
+            } catch (Exception retryEx) {
+                System.err.println("Retry failed: " + retryEx.getMessage());
+                throw retryEx; // Let the calling method handle it
+            }
+        }*/
+
+}
         /*action.click(getDriver(), ClickOnSelectAppDropDown);
         Select dropdown = new Select(SelectAppFromDropDown);
         dropdown.selectByVisibleText("gcp_cirrus_alpha_rso_01");
         action.click(getDriver(), PastScriptRadiobutton);
         action.click(getDriver(), PastScriptArea);*/
 
-    }
+
 
     public String getStatsboxText() {
         try {
@@ -111,7 +138,15 @@ public class RollBackQueryPage extends BaseClass {
                         line.trim().contains("Total record will be affected=0")) {
 
                     System.out.println("No records to update for query " + i + ". Clicking Reset.");
-                    action.click(getDriver(),ResetButton2); // Reset the form
+                    WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
+                    try {
+                        WebElement resetButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"react-root\"]/div/div/div[3]/aside/nav/ul/li[5]/a")));
+                        resetButton.click();
+                        System.out.println("Reset button clicked successfully.");
+                    } catch (Exception e) {
+                        System.err.println("Failed to click reset button: " + e.getMessage());
+                        return false; // Fail gracefully and continue processing
+                    }
                     return true; // Skip this query
                 }
             }
@@ -119,21 +154,9 @@ public class RollBackQueryPage extends BaseClass {
             System.out.println("Error checking stats box: " + e.getMessage());
         }
         return false; // Continue processing if no match
+
     }
 
-
-
-       /* WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(30));
-        wait.until(ExpectedConditions.visibilityOf(statsBox));
-        String statsText = action.getText(statsBox);
-        System.out.println("Stats Output:" + statsText);
-
-        if (statsText.contains("Total no. of records will be updated = 0")) {
-            System.out.println("No records to update. Clicking Reset.");
-            ClickonResetButton();
-            return true;
-        }
-        return false;*/
 
 
     public void passDataInPastScriptArea(String query) throws Throwable {
@@ -160,14 +183,6 @@ public class RollBackQueryPage extends BaseClass {
         PastScriptArea.click();
 
         //action.type(PastScriptArea, query);
-
-
-
-        /*updatedSqlQuery UpdatedSqlQuery = new updatedSqlQuery();
-        String[] queries = UpdatedSqlQuery.getUpdatedQueries();
-        String queryToExecute = updatedSqlQueries[0];
-        action.click(getDriver(), PastScriptArea);
-        action.type(PastScriptArea, queryToExecute);*/
 
     }
 
@@ -197,6 +212,15 @@ public class RollBackQueryPage extends BaseClass {
 
         WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(90));
         WebElement resetButton = wait.until(ExpectedConditions.elementToBeClickable(ResetButton));
+        resetButton.click();
+        /*action.isEnabled(getDriver(), ResetButton);
+        action.JSClick(getDriver(),ResetButton);*/
+    }
+
+    public void ClickonResetButton2() throws Throwable {
+
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(90));
+        WebElement resetButton = wait.until(ExpectedConditions.elementToBeClickable(ResetButton2));
         resetButton.click();
         /*action.isEnabled(getDriver(), ResetButton);
         action.JSClick(getDriver(),ResetButton);*/
