@@ -6,6 +6,7 @@ import myproject.PageObjects.RollBackQueryPage;
 import myproject.QueryProcessor.BaseClass;
 import myproject.QueryProcessor.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import myproject.QueryProcessor.updatedSqlQuery.QueryPair;
 import org.openqa.selenium.WebElement;
@@ -97,71 +98,86 @@ public class RollBackPageTest extends BaseClass {
 
         List<updatedSqlQuery.QueryPair> queryPairs = new ArrayList<>();
 
-
         for (int i = 0; i < loopLimit; i++) {
             String query = queries.get(i);
             System.out.println("Processing query " + (i + 1));
+            boolean shouldRetry;
 
+            do {
+                shouldRetry = false;
 
-            boolean retry = true;
-            int retryCount = 0;
-
-
-            while (retry && retryCount < 6) {
-                System.out.println("Retry attempt " + (retryCount + 1) + " for query " + (i + 1));
                 try {
-                    rollBack.clickOnSelectApp();
-                    Thread.sleep(1500); // Slightly increased for UI stability
-                    rollBack.passDataInPastScriptArea(query);
-                    rollBack.ClickonGenerateRollBack();
-                    rollBack.ClickonGenerateRollBack();
+                rollBack.clickOnSelectApp();
+                Thread.sleep(1500); // Slightly increased for UI stability
+                rollBack.passDataInPastScriptArea(query);
+                rollBack.ClickonGenerateRollBack();
 
-                    // Check stats and skip if no records
-                    if (rollBack.checkStatsAndResetIFNoRecords(i + 1)) {
-                        System.out.println("Skipping query " + (i + 1) + " due to no records to update.");
-                        queryPairs.add(new updatedSqlQuery.QueryPair("", query));
-                        retry = false; // ✅ Exit retry loop
-                        break;         // ✅ Exit retry loop
+                if (rollBack.checkStatsAndResetIFNoRecords(i + 1)) {
+                    System.out.println("Skipping query due to zero records.");
+                    break;
+                }
 
-                    }
+                System.out.println("Waiting for rollback output...");
+                String rollBackOutput = rollBack.taketextfromRollBackTextArea(i + 1);
+
+                if (rollBackOutput == null || rollBackOutput.trim().isEmpty()) {
+                    rollBackOutput = "";
+                    System.out.println("Empty rollback output detected for query " + (i + 1));
+                } else {
+                    System.out.println("Rollback output captured for query " + (i + 1));
+                }
+
+                queryPairs.add(new updatedSqlQuery.QueryPair(rollBackOutput, query));
+
+            } catch (Exception e) {
+                System.err.println("Failed to process query " + (i + 1) + ": " + e.getMessage());
+                e.printStackTrace();
+                queryPairs.add(new updatedSqlQuery.QueryPair("", query));
+                shouldRetry = true;
+            } finally {
 
 
-                    System.out.println("Waiting for rollback output...");
-                    String rollBackOutput = rollBack.taketextfromRollBackTextArea(i + 1);
+                try {
 
-                    if (rollBackOutput == null || rollBackOutput.trim().isEmpty()) {
-                        rollBackOutput = "";
-                        System.out.println("Empty rollback output detected for query " + (i + 1));
-                    } else {
-                        System.out.println("Rollback output captured for query " + (i + 1));
-                    }
-
-                    queryPairs.add(new updatedSqlQuery.QueryPair(rollBackOutput, query));
-                    retry = false; // ✅ Successfully processed, exit retry loop
+                    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                    WebElement resetButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"react-root\"]/div/div/div[3]/aside/nav/ul/li[5]/a")));
+                    resetButton.click();
 
 
-                } catch (Exception e) {
-                    System.err.println("Failed to process query " + (i + 1) + ": " + e.getMessage());
-                    e.printStackTrace();
-                    queryPairs.add(new updatedSqlQuery.QueryPair("", query));
-                    retryCount++;
+                } catch (Throwable e) {
+                    System.err.println("Reset failed for query " + (i + 1) + ": " + e.getMessage());
+                }
 
-                } finally {
+            }
+            }
+            while (shouldRetry);}
+            /*try {
+                    System.out.println("Attempting to reset rollback form for query " + (i + 1));
+                    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                    // Try ResetButton first (used when no records are found)
                     try {
-                        System.out.println("Attempting to reset rollback form for query " + (i + 1));
-                        rollBack.ClickonResetButton();
-                        System.out.println("Reset successful for query " + (i + 1));
-                    } catch (Exception resetEx) {
-                        System.err.println("Reset failed for query " + (i + 1) + ": " + resetEx.getMessage());
+                        WebElement resetButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"main\"]/div[2]/div/form/div[7]/button[2]")));
+                        resetButton.click();
+                        System.out.println("ResetButton2 clicked successfully for query " + (i + 1));
+                    } catch (TimeoutException e) {
+                        // If ResetButton is not found, fall back to ResetButton2
+                        System.out.println("ResetButton2 not found, trying ResetButton...");
+                        WebElement resetButton2 = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"main\"]/div[2]/div/form/div[6]/button[2]")));
+                        resetButton2.click();
+                        System.out.println("ResetButton clicked successfully for query " + (i + 1));
                     }
+
+
+                } catch (Exception resetEx) {
+                    System.err.println("Reset failed for query " + (i + 1) + ": " + resetEx.getMessage());
                 }
             }
 
-            if (!hasBenefitBundleId) {
+        }*/
+
+        if (!hasBenefitBundleId) {
                 System.out.println("Skipped the last query due to missing BenefitBundleId");
             }
-
-
 
             rollBack.ClickonSubmitQuery();
             SubmitQueryPage submitQuery = new SubmitQueryPage();
@@ -196,7 +212,3 @@ public class RollBackPageTest extends BaseClass {
             }
         }
     }
-
-}
-
-
